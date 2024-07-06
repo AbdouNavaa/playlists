@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body %}   
+
+<section class="courses">
+
+    <div>
+    <h1 class="heading">our courses 
+    <a href="{% url "myApp:add_playlist"  %}" class="inline-btn " style="margin-left: 64%;">Add Playlist</a>
+
+    </h1>
+ 
+    <div class="box-container">
+ 
+       {% for cour in cours %}
+       <div class="box">
+        <div class="tutor">
+            <img src="{{cour.author.image.url}}" alt="hello">
+              <div class="info">
+                <h3>{{cour.author}}</h3>
+                <span>{{cour.created_at|date:'d-m-o'}}</span>
+             </div>
+          </div>
+          <div class="thumb">
+            <img src="{{cour.playlist_image.url}}" alt="" >
+             <span>{{cour.author.total_videos}} videos</span>
+          </div>
+          <h3 class="title">{{cour.title}}</h3>
+          <a href="{% url 'myApp:playlists' cour.id %}"  class="inline-btn">view playlist</a>
+       </div>
+       
+       {% endfor %}      
+ 
+    </div>
+ 
+ </section>
+
+{% endblock body %}

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body %} 
+
+    <section class="form-container">
+        <form action="{% url 'myApp:add_video' playlist.id %}" method="post" enctype="multipart/form-data">
+           {% csrf_token %}
+           <h3>Ajouter une Vidéo à {{ playlist }}</h3>
+            {% csrf_token %}
+            {{ form.as_p }}
+           <input type="submit" value="Ajouter" name="submit" class="btn">
+        </form>
+     
+     </section>
+{% endblock %}
+
