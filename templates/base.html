@@ -29,17 +29,32 @@
               <div id="toggle-btn" class="fas fa-sun"></div>
            </div>
            <div class="profile">
-            
-                <img src="{% static 'images/pic-1.jpg' %}" class="image" alt="">
-                <h3 class="name">Shaikh Anas</h3>
-                <p class="role">Student</p>
-                <a href="#" class="btn">view profile</a>
-            
-              <div class="flex-btn">
-                 <a href="{% url 'accounts:logout' %}" class="option-btn">login</a>
-                 <a href="{% url 'accounts:signup' %}" class="option-btn">register</a>
-                 {% comment %} <a href="register.html" class="option-btn"></a> {% endcomment %}
-              </div>
+            {% if user.is_authenticated %}
+        {% if author %}
+        <img src="{{ author.image.url }}" alt="Profile Image" class="image"> <!-- Assurez-vous que le champ 'image' existe dans votre modèle Author -->
+        <h3 class="name">{{ user.username }}</h3>
+        <p class="role">{{ author.work }}</p> <!-- Assurez-vous que le champ 'role' existe dans votre modèle Author -->
+            {% endif %}
+        <a href="{% url 'accounts:profile' %}" class="btn">view profile</a>
+
+        <div class="flex-btn">
+            <a href="{% url 'accounts:logout' %}" class="option-btn">logout</a>
+            <a href="{% url 'accounts:signup' %}" class="option-btn">register</a>
+            {% comment %} <a href="register.html" class="option-btn"></a> {% endcomment %}
+        </div>
+    {% else %}
+        <img src="{% static 'images/pic-1.jpg' %}" class="image" alt="">
+        <h3 class="name">Shaikh Anas</h3>
+        <p class="role">Student</p>
+        <a href="{% url 'accounts:profile' %}" class="btn">view profile</a>
+
+        <div class="flex-btn">
+            <a href="{% url 'accounts:login' %}" class="option-btn">login</a>
+            <a href="{% url 'accounts:signup' %}" class="option-btn">register</a>
+            {% comment %} <a href="register.html" class="option-btn"></a> {% endcomment %}
+        </div>
+    {% endif %}
+
            </div>
      
         </section>
@@ -52,11 +67,24 @@
         </div>
 
         <div class="profile">
-            <img src="{% static 'images/pic-1.jpg' %}" class="image" alt="">
-                <h3 class="name">Shaikh Anas</h3>
-                <p class="role">Student</p>
-                <a href="#" class="btn">view profile</a>
-            
+            {% if user.is_authenticated %}
+                 {% if author %}
+                 <img src="{{ author.image.url }}" alt="Profile Image" class="image"> <!-- Assurez-vous que le champ 'image' existe dans votre modèle Author -->
+                 <h3 class="name">{{ user.username }}</h3>
+                 <p class="role">{{ author.work }}</p> <!-- Assurez-vous que le champ 'role' existe dans votre modèle Author -->
+                     {% endif %}
+                 <a href="{% url 'accounts:profile' %}" class="btn">view profile</a>
+     
+               
+             {% else %}
+                 <img src="{% static 'images/pic-1.jpg' %}" class="image" alt="">
+                 <h3 class="name">Shaikh Anas</h3>
+                 <p class="role">Student</p>
+                 <a href="{% url 'accounts:profile' %}" class="btn">view profile</a>
+     
+                 
+             {% endif %}
+       
         </div>
 
         <nav class="navbar">

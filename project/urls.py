@@ -20,9 +20,9 @@ from django.conf import settings
 from django.conf.urls.static import static
 urlpatterns = [
     path('accounts/', include('accounts.urls',namespace='accounts')),
-    path('accounts/', include('django.contrib.auth.urls')),
+    # path('accounts/', include('django.contrib.auth.urls')),
     path('admin/', admin.site.urls),
-    path('authors/', include('myApp.urls',namespace='myApp')),
+    path('', include('myApp.urls',namespace='myApp')),
 ]
 
 urlpatterns +=  static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

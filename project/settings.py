@@ -69,12 +69,25 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'accounts.context_processors.author_info',
             ],
         },
     },
 ]
 
 WSGI_APPLICATION = 'project.wsgi.application'
+
+# settings.py
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+# Assurez-vous que vous avez les paramètres suivants :
+# settings.py
+LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = '/accounts/profile1/'
+LOGOUT_REDIRECT_URL = '/accounts/login/'
 
 
 # Database

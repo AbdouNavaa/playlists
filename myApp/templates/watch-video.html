@@ -11,7 +11,7 @@
        <h3 class="title">{{video}}</h3>
        <div class="info">
           <p class="date"><i class="fas fa-calendar"></i><span>{{video.uploaded_at| date:'d-m-o'}}</span></p>
-          <p class="date"><i class="fas fa-heart"></i><span>44 likes</span></p>
+          <p class="date"><i class="fas fa-heart"></i><span>{{video.likes}} likes</span></p>
        </div>
        <div class="tutor">
         <img src="{{video.playlist.author.image.url}}" alt="" >
@@ -22,8 +22,8 @@
           </div>
        </div>
        <form action="" method="post" class="flex">
-          <a href="playlist.html" class="inline-btn">view playlist</a>
-          <button><i class="far fa-heart"></i><span>like</span></button>
+          <a href="{% url "myApp:playlists" video.playlist.id  %}" class="inline-btn">view playlist</a>
+          <a href="{% url "myApp:add_like" video.id  %}" class="inline-btn" style="background-color: rgb(247, 244, 250); color: black;"><i class="far fa-heart"></i><span>like</span></a>
        </form>
        <p class="description">
           Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque labore ratione, hic exercitationem mollitia obcaecati culpa dolor placeat provident porro.
@@ -37,11 +37,13 @@
  
     <h1 class="heading">{{comment.count}} comments</h1>
  
-    <form action="" class="add-comment">
-       <h3>add comments</h3>
-       <textarea name="comment_box" placeholder="enter your comment" required maxlength="1000" cols="30" rows="10"></textarea>
-       <input type="submit" value="add comment" class="inline-btn" name="add_comment">
-    </form>
+    <form action="{% url 'myApp:add_comment' video.id %}" method="post" class="add-comment">
+      {% csrf_token %}
+      <h3>Ajouter un commentaire</h3>
+      <textarea name="comment_box" placeholder="Entrez votre commentaire" required maxlength="1000" cols="30" rows="10"></textarea>
+      <input type="submit" value="Ajouter un commentaire" class="inline-btn" name="add_comment">
+   </form>
+   
  
     <h1 class="heading">user comments</h1>
  

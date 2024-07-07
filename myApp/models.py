@@ -12,6 +12,7 @@ class Playlist(models.Model):
     title = models.CharField(max_length=50)
     playlist_image  = models.ImageField(upload_to='profile/',null=True,blank=True)
     created_at = models.DateTimeField(auto_now=True)
+    total_videos = models.IntegerField(default=0)
     slug = models.SlugField(blank=True, null=True)
     
     

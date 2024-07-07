@@ -23,9 +23,52 @@ def playlists(request, id):
 def watch_video(request,id):
     video = Video.objects.get(id=id)
     comment = Comment.objects.filter(video=video)
-    # video = get_object_or_404(video,pk=id)
     return render(request, 'watch-video.html',{'video':video,'comment':comment})
 
+
+def add_like(request,id):
+    video = Video.objects.get(id=id)
+    video.playlist.author.total_likes += 1  # Increment the author's total_likes
+    video.likes += 1  # Increment the video's likes
+    video.save()
+    video.playlist.author.save()
+    comment = Comment.objects.filter(video=video)
+    return render(request, 'watch-video.html',{'video':video,'comment':comment})
+
+from django.contrib.auth.decorators import login_required
+
+
+@login_required
+def add_comment(request, v_id):
+    video = get_object_or_404(Video, id=v_id)
+
+    try:
+        author = Author.objects.get(user=request.user)
+        print('ok')
+    except Author.DoesNotExist:
+        print('no')
+        
+        # Gérer le cas où l'utilisateur connecté n'a pas de profil Author
+        return redirect('profile_creation_url')  # Rediriger vers une page de création de profil ou afficher un message d'erreur
+
+    if request.method == 'POST':
+        print('ok1')
+        description = request.POST.get('comment_box', '')
+        if description:
+            # Créer et sauvegarder le commentaire
+            Comment.objects.create(
+                user=author,
+                video=video,
+                description=description
+            )
+            # Incrémenter le nombre de commentaires de l'auteur
+            author.total_comments += 1
+            author.save()
+
+    # Récupérer les commentaires associés à la vidéo
+    comments = Comment.objects.filter(video=video)
+
+    return render(request, 'watch-video.html', {'video': video, 'comments': comments})
 
 def add_playlist(request):
     if request.method == 'POST':
@@ -62,6 +105,8 @@ def add_video(request, id):
             video.playlist = playlist
             video.save()
             playlist.author.total_videos += 1  # Increment the author's total_videos
+            playlist.total_videos += 1  # Increment the author's total_videos
+            playlist.author.save()  # Save the changes to the author
             playlist.author.save()  # Save the changes to the author
             return redirect('myApp:playlists', id=playlist.id)
     else:

@@ -27,13 +27,13 @@
                  <img src="{{author.image.url}}" alt="hello">
                  <div>
                     <h3>{{author}}</h3>
-                    <span>developer</span>
+                    <span>{{ll}}</span>
                  </div>
               </div>
               <p>total playlists : <span>{{author.total_palylist}}</span></p>
               <p>total videos : <span>{{author.total_videos}}</span></p>
               <p>total likes : <span>{{author.total_likes}}</span></p>
-              <a href="{% url 'accounts:profile' author.slug %}"  class="inline-btn">view profile</a>
+              <a href="{% url 'accounts:teacher_profile' author.slug %}"  class="inline-btn">view profile</a>
             </div>
             {% endfor %}
 

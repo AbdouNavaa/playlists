@@ -74,9 +74,9 @@
           </div>
           <div class="thumb">
             <img src="{{cour.playlist_image.url}}" alt="" >
-             <span>{{cour.author.total_videos}} videos</span>
+             <span>{{cour.total_videos}} videos</span>
           </div>
-          <h3 class="title">{{author.title}}</h3>
+          <h3 class="title">{{cour.title}}</h3>
           <a href="{% url 'myApp:playlists' cour.id %}"  class="inline-btn">view playlist</a>
        </div>
        

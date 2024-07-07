@@ -1,0 +1,52 @@
+
+{% extends 'base.html' %}
+{% comment %} {% load bootstrap4 %} {% endcomment %}
+{% block content %}   
+{% endblock content %}
+
+{% block body %}        
+ 
+<section class="teacher-profile">
+
+    <h1 class="heading">profile details</h1>
+ 
+    <div class="details">
+       <div class="tutor">
+        <img src="{{ author.image.url }}" class="image" alt="{{ author.user.first_name }}">
+        <h3>{{author}}</h3>
+        <span>{{author.work}}</span>
+    
+       </div>
+       <div class="flex">
+          <p>total playlists : <span>{{author.total_palylist}}</span></p>
+          <p>total videos : <span>{{author.total_videos}}</span></p>
+          <p>total likes : <span>{{author.total_likes}}</span></p>
+          <p>total comments : <span>{{author.total_comments}}</span></p>
+       </div>
+    </div>
+ 
+ </section>
+ 
+ <section class="courses">
+ 
+    <h1 class="heading">our courses</h1>
+ 
+    <div class="box-container">
+ 
+       {% for playlist in playlists %}
+
+       <div class="box">
+          <div class="thumb">
+            <img src="{{playlist.playlist_image.url}}" alt="" >
+            <span>{{playlist.total_videos}} videos</span>
+         </div>
+         <h3 class="title">{{playlist.title}}</h3>
+         <a href="{% url 'myApp:playlists' playlist.id %}"  class="inline-btn">view playlist</a>
+       </div>
+ 
+ 
+ {% endfor %}
+    </div>
+ 
+ </section>
+ {% endblock body %}
