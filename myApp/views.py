@@ -22,8 +22,17 @@ def playlists(request, id):
 
 def watch_video(request,id):
     video = Video.objects.get(id=id)
-    comment = Comment.objects.filter(video=video)
-    return render(request, 'watch-video.html',{'video':video,'comment':comment})
+    update = False
+    comments = Comment.objects.filter(video=video)
+    return render(request, 'watch-video.html',{'video':video,'comments':comments,'update':update})
+
+def to_Update(request,id,c_id):
+    video = Video.objects.get(id=id)
+    comment = Comment.objects.get(id=c_id)
+    update = True
+    comments = Comment.objects.filter(video=video)
+    print('abdou',comment.id,comment)
+    return render(request, 'watch-video.html',{'video':video,'comments':comments,'comment':comment,'update':update})
 
 
 def add_like(request,id):
@@ -41,7 +50,7 @@ from django.contrib.auth.decorators import login_required
 @login_required
 def add_comment(request, v_id):
     video = get_object_or_404(Video, id=v_id)
-
+    update = False
     try:
         author = Author.objects.get(user=request.user)
         print('ok')
@@ -49,7 +58,7 @@ def add_comment(request, v_id):
         print('no')
         
         # Gérer le cas où l'utilisateur connecté n'a pas de profil Author
-        return redirect('profile_creation_url')  # Rediriger vers une page de création de profil ou afficher un message d'erreur
+        return redirect('myApp:watch_video',id=v_id)  # Rediriger vers une page de création de profil ou afficher un message d'erreur
 
     if request.method == 'POST':
         print('ok1')
@@ -67,6 +76,67 @@ def add_comment(request, v_id):
 
     # Récupérer les commentaires associés à la vidéo
     comments = Comment.objects.filter(video=video)
+
+    return render(request, 'watch-video.html', {'video': video, 'comments': comments,'update': update})
+
+@login_required
+def update_comment(request, v_id,c_id):
+    video = get_object_or_404(Video, id=v_id)
+    comment = get_object_or_404(Comment, id=c_id)
+
+    try:
+        author = Author.objects.get(user=request.user)
+        print('ok')
+    except Author.DoesNotExist:
+        print('no')
+        
+        # Gérer le cas où l'utilisateur connecté n'a pas de profil Author
+        return redirect('myApp:watch_video',id=v_id)  # Rediriger vers une page de création de profil ou afficher un message d'erreur
+
+    if request.method == 'POST':
+        print('ok1')
+        description = request.POST.get('comment_box', '')
+        if description:
+            # Créer et sauvegarder le commentaire
+            if request.user.id == comment.user.id+1:
+                Comment.objects.update(
+                    user=author,
+                    video=video,
+                    description=description
+                )
+            else:
+                print("No you can't")
+
+    # Récupérer les commentaires associés à la vidéo
+    comments = Comment.objects.filter(video=video)
+
+    return render(request, 'watch-video.html', {'video': video, 'comments': comments,'comment':comment})
+
+
+@login_required
+def delete_comment(request, v_id,c_id):
+    video = get_object_or_404(Video, id=v_id)
+    comment = get_object_or_404(Comment, id=c_id)
+
+    try:
+        author = Author.objects.get(user=request.user)
+        print('ok')
+    except Author.DoesNotExist:
+        print('no')
+        
+        # Gérer le cas où l'utilisateur connecté n'a pas de profil Author
+        return redirect('myApp:watch_video',id=v_id)  # Rediriger vers une page de création de profil ou afficher un message d'erreur
+
+    if request.user.id == comment.user.id+1:
+        print('ok1')
+        comment.delete()
+            # Incrémenter le nombre de commentaires de l'auteur
+        author.total_comments -= 1
+        author.save()
+    else:
+        print('Tu ne peux pas supprimer cette commentaire',request.user.id,comment.user.id)
+    comments = Comment.objects.filter(video=video)
+    
 
     return render(request, 'watch-video.html', {'video': video, 'comments': comments})
 
