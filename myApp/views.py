@@ -79,38 +79,36 @@ def add_comment(request, v_id):
 
     return render(request, 'watch-video.html', {'video': video, 'comments': comments,'update': update})
 
+from django.contrib import messages
 @login_required
-def update_comment(request, v_id,c_id):
+def update_comment(request, v_id, c_id):
     video = get_object_or_404(Video, id=v_id)
     comment = get_object_or_404(Comment, id=c_id)
 
     try:
         author = Author.objects.get(user=request.user)
-        print('ok')
     except Author.DoesNotExist:
-        print('no')
-        
         # Gérer le cas où l'utilisateur connecté n'a pas de profil Author
-        return redirect('myApp:watch_video',id=v_id)  # Rediriger vers une page de création de profil ou afficher un message d'erreur
+        messages.error(request, "Vous devez avoir un profil pour commenter.")
+        return redirect('myApp:watch_video', id=v_id)
 
     if request.method == 'POST':
-        print('ok1')
         description = request.POST.get('comment_box', '')
         if description:
-            # Créer et sauvegarder le commentaire
-            if request.user.id == comment.user.id+1:
-                Comment.objects.update(
-                    user=author,
-                    video=video,
-                    description=description
-                )
+            # Vérifier si l'utilisateur est autorisé à mettre à jour le commentaire
+            if request.user.id == comment.user.id +1:
+                comment.description = description
+                comment.save()
+                messages.success(request, "Commentaire mis à jour avec succès.")
+                print("Commentaire mis à jour avec succès.")
             else:
-                print("No you can't")
+                messages.error(request, "Vous n'êtes pas autorisé à mettre à jour ce commentaire.")
+                print("Vous n'êtes pas autorisé à mettre à jour ce commentaire.")
 
     # Récupérer les commentaires associés à la vidéo
     comments = Comment.objects.filter(video=video)
 
-    return render(request, 'watch-video.html', {'video': video, 'comments': comments,'comment':comment})
+    return render(request, 'watch-video.html', {'video': video, 'comments': comments, 'comment': comment})
 
 
 @login_required

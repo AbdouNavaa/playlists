@@ -2,6 +2,16 @@
 {% load static %}
 {% block body %}  
 
+{% if messages %}
+<div>
+    {% for message in messages %}
+        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+            {{ message }}
+        </div>
+    {% endfor %}
+</div>
+{% endif %}
+
 <section class="watch-video">
 
     <div class="video-container">
@@ -38,12 +48,11 @@
     <h1 class="heading">{{comments.count}} comments</h1>
  
     {% if update %}
-    <form action="{% url 'myApp:update_comment' video.id comment.id %}" method="post" class="add-comment">
+    <form method="post" action="{% url 'myApp:update_comment' v_id=video.id c_id=comment.id %}" class="add-comment">
       {% csrf_token %}
-      <h3>Modifier un commentaire</h3>
-      <textarea name="comment_box" placeholder="{{comment}}" required maxlength="1000" cols="30" rows="10"></textarea>
-      <input type="submit" value="Modifier un commentaire" class="inline-btn" name="update_comment">
-   </form>
+      <textarea name="comment_box"  required required maxlength="1000" cols="30" rows="10">{{ comment.description }}</textarea>
+      <input type="submit" value="Modifier le commentaire" class="inline-btn" name="add_comment">
+  </form>
    {% else %}
    <form action="{% url 'myApp:add_comment' video.id %}" method="post" class="add-comment">
       {% csrf_token %}
